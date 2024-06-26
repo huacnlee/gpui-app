@@ -42,24 +42,24 @@ impl Render for WebViewTest {
                     .bg(rgb(0x00ff00))
                     .child("This is webview"),
             )
-        // .child(HelloWorldEl {
-        //     view: self.view.clone(),
-        // })
+            .child(WebViewElement {
+                view: self.view.clone(),
+            })
     }
 }
 
-struct HelloWorldEl {
+struct WebViewElement {
     view: Arc<WebView>,
 }
-impl IntoElement for HelloWorldEl {
-    type Element = HelloWorldEl;
+impl IntoElement for WebViewElement {
+    type Element = WebViewElement;
 
     fn into_element(self) -> Self::Element {
         self
     }
 }
 
-impl Element for HelloWorldEl {
+impl Element for WebViewElement {
     type RequestLayoutState = ();
     type PrepaintState = ();
 
