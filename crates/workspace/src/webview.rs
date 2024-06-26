@@ -6,52 +6,45 @@ use wry::raw_window_handle::HasWindowHandle;
 use wry::{dpi, Rect, WebView};
 
 struct WebViewTest {
-    views: Vec<Arc<WebView>>,
+    view: Arc<WebView>,
 }
 
 impl WebViewTest {
-    fn new(num_views: usize, handle: &dyn HasWindowHandle) -> Self {
-        let views = (0..num_views)
-            .map(|i| {
-                Arc::new(
-                    wry::WebViewBuilder::new_as_child(&handle)
-                        .with_html(format!(
-                            "<html><body>Hello, world! I'm webview {i}</body></html>"
-                        ))
-                        .build()
-                        .unwrap(),
-                )
-            })
-            .collect();
+    fn new(handle: &dyn HasWindowHandle) -> Self {
+        let view = Arc::new(
+            wry::WebViewBuilder::new_as_child(&handle)
+                .with_html(format!(
+                    "<html><body>Hello, world! I'm webview</body></html>"
+                ))
+                .build()
+                .expect("Failed to create webview."),
+        );
 
-        Self { views }
+        Self { view }
     }
 }
 
 impl Render for WebViewTest {
     fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {
-        let mut parent = div()
+        div()
             .id("parent")
             .block()
             .overflow_y_scroll()
             .size_full()
             .bg(rgb(0xff0000))
             .justify_center()
-            .items_center();
-
-        for (i, view) in self.views.iter().enumerate() {
-            parent = parent.child(
+            .items_center()
+            .child(
                 div()
                     .size(Length::Definite(DefiniteLength::Absolute(
                         AbsoluteLength::Pixels(Pixels(100.0)),
                     )))
                     .bg(rgb(0x00ff00))
-                    .child(format!("This is webview {}:", i)),
-            );
-            parent = parent.child(HelloWorldEl { view: view.clone() });
-        }
-
-        parent
+                    .child("This is webview"),
+            )
+        // .child(HelloWorldEl {
+        //     view: self.view.clone(),
+        // })
     }
 }
 
@@ -127,7 +120,7 @@ impl Element for HelloWorldEl {
 }
 
 fn main() {
-    App::new().run(|cx: &mut AppContext| {
+    App::new().run(move |cx| {
         let window_bounds = Bounds::centered(None, size(px(1200.0), px(900.0)), cx);
 
         cx.spawn(|mut cx| async move {
@@ -146,10 +139,24 @@ fn main() {
                 ..Default::default()
             };
 
-            let window = cx.open_window(options, |cx| {
-                let view = WebViewTest::new(1, cx.raw_window_handle());
-                cx.new_view(|_cx| view)
-            });
+            let window = cx
+                .open_window(options, |cx| {
+                    let view = WebViewTest::new(cx.raw_window_handle());
+                    cx.new_view(|_cx| view)
+                })
+                .unwrap();
+
+            window
+                .update(&mut cx, |_, cx| {
+                    cx.activate_window();
+                    cx.set_window_title("GPUI App");
+                    cx.on_release(|_, _, _cx| {
+                        // exit app
+                        std::process::exit(0);
+                    })
+                    .detach();
+                })
+                .unwrap();
         })
         .detach();
     });
