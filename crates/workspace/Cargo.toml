@@ -9,3 +9,8 @@ ui.workspace = true
 ui-story.workspace = true
 anyhow.workspace = true
 util.workspace = true
+wry.workspace = true
+
+[[bin]]
+name = "workspace"
+path = "src/webview.rs"

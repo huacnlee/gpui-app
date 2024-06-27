@@ -14,6 +14,7 @@ use ui_story::Stories;
 use util::ResultExt as _;
 
 mod app_state;
+mod webview;
 
 pub use app_state::AppState;
 
