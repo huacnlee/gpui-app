@@ -1,5 +1,6 @@
 mod button_story;
 mod checkbox_story;
+mod drawer_story;
 mod dropdown_story;
 mod image_story;
 mod input_story;
@@ -12,6 +13,7 @@ mod tooltip_story;
 
 pub use button_story::ButtonStory;
 pub use checkbox_story::CheckboxStory;
+pub use drawer_story::DrawerStory;
 pub use dropdown_story::DropdownStory;
 pub use image_story::ImageStory;
 pub use input_story::InputStory;
@@ -24,9 +26,8 @@ pub use tooltip_story::TooltipStory;
 
 use gpui::{
     div, prelude::FluentBuilder as _, px, AnyElement, AnyView, AppContext, Div, EventEmitter,
-    FocusableView, InteractiveElement, IntoElement, ParentElement, Pixels, Render,
-    SharedString, StatefulInteractiveElement, Styled as _, Task, View, ViewContext, VisualContext,
-    WindowContext,
+    FocusableView, InteractiveElement, IntoElement, ParentElement, Pixels, Render, SharedString,
+    StatefulInteractiveElement, Styled as _, Task, View, ViewContext, VisualContext, WindowContext,
 };
 use workspace::{
     dock::{DockPosition, Panel, PanelEvent},

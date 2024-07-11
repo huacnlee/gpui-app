@@ -1,8 +1,8 @@
 use gpui::*;
 use prelude::FluentBuilder as _;
 use story::{
-    ButtonStory, CheckboxStory, DropdownStory, ImageStory, InputStory, ListStory, PickerStory,
-    PopoverStory, StoryContainer, SwitchStory, TableStory, TooltipStory,
+    ButtonStory, CheckboxStory, DrawerStory, DropdownStory, ImageStory, InputStory, ListStory,
+    PickerStory, PopoverStory, StoryContainer, SwitchStory, TableStory, TooltipStory,
 };
 use workspace::{dock::DockPosition, TitleBar, Workspace};
 
@@ -132,6 +132,15 @@ impl StoryWorkspace {
             "Table",
             "Powerful table and datagrids built using TanStack Table.",
             TableStory::view(cx).into(),
+            workspace.clone(),
+            cx,
+        )
+        .detach();
+
+        StoryContainer::add_pane(
+            "Drawer",
+            "Extends the Dialog component to display content that complements the main content of the screen.",
+            DrawerStory::view(cx).into(),
             workspace.clone(),
             cx,
         )

@@ -18,6 +18,7 @@ pub mod prelude;
 pub mod theme;
 pub use styled_ext::StyledExt;
 pub mod divider;
+pub mod drawer;
 pub mod dropdown;
 pub mod input;
 pub mod list;
@@ -40,6 +41,7 @@ pub use stack::*;
 pub use svg_img::*;
 
 /// Initialize the UI module.
+#[must_use = "This function must use to initialize the UI"]
 pub fn init(cx: &mut gpui::AppContext) {
     input::init(cx);
     list::init(cx);
@@ -47,4 +49,5 @@ pub fn init(cx: &mut gpui::AppContext) {
     popover::init(cx);
     popup_menu::init(cx);
     table::init(cx);
+    drawer::init(cx);
 }
